@@ -12,14 +12,22 @@
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
+        <th colspan=2></th>
     </tr>
-    <c:forEach var="mealWE" items="${allMealsWithExcess}">
-        <tr style="background-color:${mealWE.excess ? 'red' : 'greenyellow'}">
-            <td>${mealWE.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))}
-            <td>${mealWE.description}</td>
-            <td>${mealWE.calories}</td>
+    <c:forEach var="meal" items="${allMeals}">
+        <tr style="background-color:${meal.excess ? 'red' : 'greenyellow'}">
+            <td>${meal.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))}
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>
+                    &mealDate=<c:out value="${meal.dateTime}"/>
+                    &description=<c:out value="${meal.description}"/>
+                    &calories=<c:out value="${meal.calories}"/>">Update</a></td>
+
+            <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
+<a href="meals?action=create">Add User</a>
 </body>
 </html>
