@@ -8,7 +8,11 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -21,13 +25,35 @@ public class MealRestController {
 
     @Autowired
     private MealService service;
-/*    5.1: Отдать свою еду (для отображения в таблице, формат List<MealTo>), запрос БЕЗ параметров
-      5.2: Отдать свою еду, отфильтрованную по startDate, startTime, endDate, endTime
-      5.3: Отдать/удалить свою еду по id, параметр запроса - id еды. Если еда с этим id чужая или отсутствует - NotFoundException
-      5.4: Сохранить/обновить еду, параметр запроса - Meal. Если обновляемая еда с этим id чужая или отсутствует - NotFoundException
-      5.5: Сервлет мы удалим, а контроллер останется, поэтому возвращать List<MealTo> надо из контроллера. И userId принимать в контроллере НЕЛЬЗЯ (иначе - для чего аторизация?).
-      5.6: В концепции REST при update дополнительно принято передавать id (см. AdminRestController.update)
-      5.7: Для получения всей своей еды сделайте отдельный getAll без применения фильтра*/
-//на этом уровне вытягиваем ИД авторизованного пользователя и пихаем в методы
 
+    public List<MealTo> getAll() {
+        log.info("getAll");
+        return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    }
+
+    public List<Meal> getBetween(LocalDate startDate, LocalDate endDate) {
+        return service.getBetweenDates(startDate, endDate, SecurityUtil.authUserId());
+    }
+
+    public Meal get(int id) {
+        log.info("get {}", id);
+        return service.get(id, SecurityUtil.authUserId());
+    }
+
+    public Meal create(Meal meal) {
+        log.info("create {}", meal);
+        checkNew(meal);
+        return service.create(meal, SecurityUtil.authUserId());
+    }
+
+    public void delete(int id) {
+        log.info("delete {}", id);
+        service.delete(id, SecurityUtil.authUserId());
+    }
+
+    public void update(Meal meal, int id) {
+        log.info("update {} with id={}", meal, id);
+        assureIdConsistent(meal, id);
+        service.update(meal, SecurityUtil.authUserId());
+    }
 }

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
@@ -14,6 +14,13 @@
         .excess {
             color: red;
         }
+
+        .empty {
+            display: none;
+        }
+
+        .filled {
+        }
     </style>
 </head>
 <body>
@@ -23,7 +30,28 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
-    <table border="1" cellpadding="8" cellspacing="0">
+    <form method="get" action="meals">
+        <table>
+            <input type="hidden" value="filter" name="action">
+            <tr>
+                <td>Date</td>
+                <td>from: <input type="date" name="startDate" value="${param.startDate}"></td>
+                <td>to: <input type="date" name="endDate" value="${param.endDate}"></td>
+            </tr>
+            <tr>
+                <td>Time</td>
+                <td>from: <input type="time" name="startTime" value="${param.startTime}"></td>
+                <td>to: <input type="time" name="endTime" value="${param.endTime}"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button type="submit">Get results</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <c:set var="isEmpty" value="${meals.isEmpty()}"/>
+    <table border="1" cellpadding="8" cellspacing="0" class="${isEmpty ? 'empty' : 'filled'}">
         <thead>
         <tr>
             <th>Date</th>
@@ -49,6 +77,7 @@
             </tr>
         </c:forEach>
     </table>
+    <p class="${isEmpty ? 'filled' : 'empty'}">No meals entries found</p>
 </section>
 </body>
 </html>

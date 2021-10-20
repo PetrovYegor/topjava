@@ -24,7 +24,6 @@ public class InMemoryUserRepository implements UserRepository {
             repository.put(user.getId(), user);
             return user;
         }
-        // handle case: update, but not present in storage
         return repository.computeIfPresent(user.getId(), (id, oldMeal) -> user);
     }
 
@@ -43,7 +42,6 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        //return Collections.emptyList();
         Comparator<User> compareByNameAndEmail = Comparator
                 .comparing(User::getName)
                 .thenComparing(User::getEmail);
