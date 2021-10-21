@@ -29,7 +29,7 @@ public class MealService {
     }
 
     public List<Meal> getBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
-        return repository.getBetween(startDate, endDate, userId);
+        return repository.getFilterResults(userId, startDate, endDate);
     }
 
     public List<Meal> getAll(int userId) {
@@ -42,5 +42,9 @@ public class MealService {
 
     public Meal create(Meal meal, int userId) {
         return repository.save(meal, userId);
+    }
+
+    public List<Meal> getFilterResults(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.getFilterResults(userId, startDate, endDate);
     }
 }
