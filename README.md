@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec7b738a3c5a452ab9cf200d6293cbd9)](https://www.codacy.com/gh/PetrovYegor/topjava/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PetrovYegor/topjava&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://api.travis-ci.com/PetrovYegor/topjava.svg?branch=master)](https://travis-ci.com/PetrovYegor/topjava)
+[![Build Status](https://app.travis-ci.com/PetrovYegor/topjava.svg?branch=master)](https://app.travis-ci.com/PetrovYegor/topjava)
 
 Java Enterprise Online Project
 ===============================
