@@ -51,13 +51,13 @@ public class MealServiceTest {
     };
 
     @AfterClass
-    public static void afterClass() throws Exception {
+    public static void afterClass(){
         String tableHead = String.format(LOG_FORMAT, "Test name", "Duration");
         logger.debug("\r\n" +
                 "-------------------------------------------\r\n"
                 + tableHead +
                 "-------------------------------------------\r\n" +
-                logs.toString());
+                logs);
     }
 
     @Test
@@ -125,7 +125,6 @@ public class MealServiceTest {
     @Test
     public void getAll() {
         MEAL_MATCHER.assertMatch(service.getAll(USER_ID), meals);
-
     }
 
     @Test
