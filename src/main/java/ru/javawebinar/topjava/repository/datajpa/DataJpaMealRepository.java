@@ -1,12 +1,13 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class DataJpaMealRepository implements MealRepository {
@@ -19,16 +20,22 @@ public class DataJpaMealRepository implements MealRepository {
         this.crudUserRepository = crudUserRepository;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Meal save(Meal meal, int userId) {
-        meal.setUser(crudUserRepository.getById(userId));
         if (meal.isNew()) {
-            crudRepository.save(meal);
-            return meal;
-        } else if (get(meal.id(), userId) == null) {
+            meal.setUser(crudUserRepository.getById(userId));
+            return crudRepository.save(meal);
+        }
+        Meal currentMeal = get(meal.getId(), userId);
+        if (currentMeal == null) {
             return null;
         }
-        return crudRepository.save(meal);
+        currentMeal.setDateTime(meal.getDateTime());
+        currentMeal.setCalories(meal.getCalories());
+        currentMeal.setDescription(meal.getDescription());
+        crudRepository.save(currentMeal);
+        return currentMeal;
     }
 
     @Override
@@ -38,12 +45,9 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = null;
-        Optional<Meal> optional = crudRepository.findById(id);
-        if (optional.isPresent()) {
-            meal = optional.get();
-        }
-        return meal != null && meal.getUser().getId() == userId ? meal : null;
+        return crudRepository.findById(id)
+                .filter(m -> m.getUser().getId() == userId)
+                .orElse(null);
     }
 
     @Override
