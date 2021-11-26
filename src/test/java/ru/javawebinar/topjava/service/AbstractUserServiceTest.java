@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
@@ -32,6 +33,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired(required = false)
     protected JpaUtil jpaUtil;
+
+    @Autowired
+    protected Environment environment;
 
     @Before
     public void setup() {

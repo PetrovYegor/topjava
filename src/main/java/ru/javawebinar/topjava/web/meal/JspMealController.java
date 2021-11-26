@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/meals")
@@ -51,24 +52,17 @@ public class JspMealController extends AbstractMealController {
         return "/mealForm";
     }
 
-    @RequestMapping("/delete")
+    @GetMapping("/delete")
     public String delete(HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
         super.delete(id);
         return "redirect:http://localhost:8080/topjava/meals";
     }
 
-    @RequestMapping("/save")
+    @GetMapping("/save")
     public String save(HttpServletRequest request, Model model) {
-        Integer id = null;
-        String idRequestParameter = request.getParameter("id");
-        if (idRequestParameter == null || idRequestParameter.equals("")) {
-
-        } else {
-            id = Integer.parseInt(request.getParameter("id"));
-        }
-        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
-        Meal meal = new Meal(dateTime,
+        Integer id = getId(request);
+        Meal meal = new Meal(LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
         if (id == null) {
@@ -77,5 +71,10 @@ public class JspMealController extends AbstractMealController {
             super.update(meal, id);
         }
         return "redirect:http://localhost:8080/topjava/meals";
+    }
+
+    private int getId(HttpServletRequest request) {
+        String paramId = Objects.requireNonNull(request.getParameter("id"));
+        return Integer.parseInt(paramId);
     }
 }
